@@ -1,0 +1,902 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>COMUNICAÇÃO SBCD - FOLDER INFORMAÇÕES</title>
+    <style>
+        /* ===================== */
+        /* MODO IMPRESSÃO / PDF */
+        /* ===================== */
+        @media print {
+
+            /* Reset visual */
+            * {
+                background: transparent !important;
+                box-shadow: none !important;
+                text-shadow: none !important;
+            }
+
+            body {
+                background: #ffffff !important;
+                color: #000 !important;
+            }
+
+            /* Layout */
+            .wrap {
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            /* Cabeçalho */
+            .header {
+                border: none !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                padding: 20px 10px !important;
+                background: #fff !important;
+            }
+
+            .title {
+                color: #000 !important;
+                font-size: 20px !important;
+            }
+
+            /* Sempre abrir as seções */
+            .section-detail {
+                page-break-inside: avoid;
+            }
+
+            .section-detail .expand-content {
+                max-height: none !important;
+                padding: 10px 20px 20px !important;
+                display: block !important;
+            }
+
+            .section-detail .chevron {
+                display: none !important;
+            }
+
+            /* Ocultar textos auxiliares */
+            .trigger-text p {
+                display: none !important;
+            }
+
+            /* Ajuste dos cards */
+            .info-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 12px !important;
+            }
+
+            .info-box {
+                border: 1px solid #ccc !important;
+                border-radius: 8px !important;
+                padding: 12px !important;
+                page-break-inside: avoid;
+            }
+
+            .info-box h3 {
+                color: #000 !important;
+            }
+
+            /* Badges */
+            .stat-badge,
+            .closed-label {
+                border: 1px solid #000 !important;
+                color: #000 !important;
+                background: #fff !important;
+            }
+
+            /* Listas */
+            .unit-list li {
+                color: #000 !important;
+                font-size: 11px !important;
+            }
+
+            /* Rodapé */
+            .footer-note {
+                color: #000 !important;
+                font-size: 10px !important;
+                margin-top: 40px !important;
+            }
+
+            /* Quebra de página manual (opcional) */
+            .page-break {
+                page-break-before: always;
+            }
+        }
+
+
+        
+        :root {
+            --bg: #eaf2ff;
+            --card: #ffffff;
+            --ink: #0b2545;
+            --muted: #3b5f8a;
+            --line: rgba(11, 37, 69, .16);
+            --accent: #1e88e5;
+            --accent2: #1565c0;
+            --header: #0d47a1;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+            background: radial-gradient(1200px 700px at 15% 0%, rgba(30, 136, 229, .20), transparent 45%),
+                radial-gradient(900px 500px at 100% 10%, rgba(21, 101, 192, .18), transparent 40%),
+                linear-gradient(180deg, #dfeeff, #eaf2ff 40%, #f6faff);
+            color: var(--ink);
+            min-height: 100vh;
+        }
+
+        .wrap {
+            max-width: 1500px;
+            margin: 28px auto;
+            padding: 0 16px 64px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 32px 22px;
+            background: linear-gradient(90deg, var(--header), var(--accent));
+            border: 1px solid rgba(255, 255, 255, .18);
+            border-radius: 18px;
+            box-shadow: 0 18px 50px rgba(13, 71, 161, .25);
+            margin-bottom: 32px;
+        }
+
+        .title {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: .5px;
+            margin: 0;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .menu-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .menu-item {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 20px;
+            text-decoration: none;
+            color: var(--ink);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 8px 30px rgba(11, 37, 69, 0.06);
+        }
+
+        .menu-item:hover {
+            background: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(11, 37, 69, 0.1);
+            border-color: var(--accent);
+        }
+
+        .menu-item .icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .menu-item span {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Secções de Detalhe Abaixo */
+        .section-detail {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(11, 37, 69, 0.05);
+            margin-top: 16px;
+        }
+
+        .section-trigger {
+            padding: 24px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            background: #fff;
+            transition: background 0.2s;
+        }
+
+        .section-trigger:hover {
+            background: rgba(30, 136, 229, 0.02);
+        }
+
+        .trigger-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .trigger-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--header);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 6px 15px rgba(13, 71, 161, 0.15);
+        }
+
+        .trigger-text h2 {
+            margin: 0;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .trigger-text p {
+            margin: 2px 0 0;
+            font-size: 12px;
+            color: var(--accent2);
+            font-weight: 700;
+        }
+
+        .chevron {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--muted);
+        }
+
+        /* Conteúdo Expansível */
+        .expand-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding 0.3s ease;
+            background: #fcfdfe;
+        }
+
+        .active .expand-content {
+            max-height: 2500px;
+            /* Maior para caber as listas longas */
+            padding: 10px 28px 32px;
+            border-top: 1px solid var(--line);
+        }
+
+        .active .chevron {
+            transform: rotate(180deg);
+            color: var(--accent);
+        }
+
+        /* Grids e Listas */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .info-box {
+            padding: 16px;
+            background: #fff;
+            border: 1px solid rgba(11, 37, 69, 0.08);
+            border-radius: 14px;
+        }
+
+        /* Cores Específicas para Certificações */
+        .box-green {
+            background: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            border-left: 6px solid var(--success);
+        }
+
+        .box-green h3 {
+            color: var(--success) !important;
+        }
+
+        .box-bronze {
+            background: #fff8e1;
+            border: 1px solid #ffecb3;
+            border-left: 6px solid var(--bronze);
+        }
+
+        .box-bronze h3 {
+            color: var(--bronze) !important;
+        }
+
+        .info-box.full-width {
+            grid-column: 1 / -1;
+        }
+
+
+        .info-box h3 {
+            margin: 0 0 4px;
+            font-size: 14px;
+            color: var(--header);
+            font-weight: 800;
+        }
+
+        .info-box .sub-label {
+            font-size: 11px;
+            color: var(--accent2);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .email-link {
+            font-size: 12px;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 12px;
+            word-break: break-all;
+        }
+
+        .unit-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .unit-list li {
+            font-size: 12px;
+            padding: 6px 0;
+            border-bottom: 1px dotted var(--line);
+            color: var(--muted);
+            line-height: 1.4;
+        }
+
+        .unit-list li:last-child {
+            border: none;
+        }
+
+        .stat-badge {
+            color: #74c628;
+            background: #f1f8e9;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .closed-label {
+            color: #c62828;
+            background: #ffebee;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .footer-note {
+            margin-top: 60px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 600px) {
+            .title {
+                font-size: 18px;
+            }
+
+            .menu-container {
+                grid-template-columns: 1fr;
+            }
+
+            .trigger-text h2 {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrap">
+        <header class="header">
+            <h1 class="title">COMUNICAÇÃO SBCD - FOLDER INFORMAÇÕES</h1>
+        </header>
+
+        <!-- CERTIFICAÇÕES (NOVA SEÇÃO) -->
+        <div class="section-detail" id="certificacoesSection">
+            <div class="section-trigger" onclick="this.parentElement.classList.toggle('active')">
+                <div class="trigger-content">
+                    <div class="trigger-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
+                            <path d="m9 12 2 2 4-4" />
+                        </svg>
+                    </div>
+                    <div class="trigger-text">
+                        <h2>Certificações</h2>
+                        <p>Reconhecimentos e Acreditações de Qualidade</p>
+                    </div>
+                </div>
+                <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m6 9 6 6 6-6" />
+                </svg>
+            </div>
+
+            <div class="expand-content">
+                <div class="info-grid">
+                    <!-- CEBAS (VERDE) -->
+                    <div class="info-box box-green">
+                        <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 10px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="#2e7d32" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                <path d="m9 12 2 2 4-4" />
+                            </svg>
+                            <span class="sub-label" style="margin:0; color: #2e7d32;">Área da Saúde</span>
+                        </div>
+                        <h3>Certificado de Entidade Beneficente de Assistência Social na Área da Saúde (CEBAS)</h3>
+                    </div>
+
+                    <!-- ONA (BRONZE) -->
+                    <div class="info-box box-bronze">
+                        <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 10px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="#cd7f32" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="12" cy="8" r="7" />
+                                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+                            </svg>
+                            <span class="sub-label" style="margin:0; color: #cd7f32;">Acreditação ONA</span>
+                        </div>
+                        <h3>17 UBSs da Zona Norte de São Paulo (SP) com Acreditação Nível 1 da ONA</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUALIFICAÇÕES -->
+        <div class="section-detail" id="qualSection">
+            <div class="section-trigger" onclick="this.parentElement.classList.toggle('active')">
+                <div class="trigger-content">
+                    <div class="trigger-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m12 14 4-4" />
+                            <path d="m3.34 19 1.4-1.4" />
+                            <path
+                                d="M5.8 11.3c.6 2.2 2.5 3.8 4.8 4.4l1.4 3.7c.3.9 1.6.9 1.9 0l1.4-3.7c2.3-.6 4.2-2.2 4.8-4.4l3.7-1.4c.9-.3.9-1.6 0-1.9l-3.7-1.4c-.6-2.2-2.5-3.8-4.8-4.4l-1.4-3.7c-.3-.9-1.6-.9-1.9 0L10.6 6.9c-2.3.6-4.2 2.2-4.8 4.4l-3.7 1.4c-.9.3-.9 1.6 0 1.9l3.7 1.4Z" />
+                        </svg>
+                    </div>
+                    <div class="trigger-text">
+                        <h2>Qualificações</h2>
+                        <p>78 Municípios e 7 Estados</p>
+                    </div>
+                </div>
+                <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m6 9 6 6 6-6" />
+                </svg>
+            </div>
+            <div class="expand-content">
+                <div class="info-grid">
+                    <div class="info-box"><b>SÃO PAULO</b><br><small>64 Municípios, 1 Estado</small></div>
+                    <div class="info-box"><b>RIO DE JANEIRO</b><br><small>6 Municípios, 1 Estado</small></div>
+                    <div class="info-box"><b>SANTA CATARINA</b><br><small>3 Municípios, 1 Estado</small></div>
+                    <div class="info-box"><b>AMAZONAS</b><br><small>1 Estado</small></div>
+                    <div class="info-box"><b>BAHIA</b><br><small>1 Município, 1 Estado</small></div>
+                    <div class="info-box"><b>ESPÍRITO SANTO</b><br><small>1 Município</small></div>
+                    <div class="info-box"><b>MINAS GERAIS</b><br><small>2 Municípios</small></div>
+                    <div class="info-box"><b>PARANÁ</b><br><small>1 Município</small></div>
+                    <div class="info-box"><b>PIAUÍ</b><br><small>1 Estado</small></div>
+                    <div class="info-box"><b>SERGIPE</b><br><small>1 Estado</small></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NÚMEROS UNIDADES (NOVA SECÇÃO ABAIXO) -->
+         <div class="page-break"></div>
+        <div class="section-detail" id="unidadesSection">
+            <div class="section-trigger" onclick="this.parentElement.classList.toggle('active')">
+                <div class="trigger-content">
+                    <div class="trigger-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 12h18" />
+                            <path d="M12 3v18" />
+                            <rect width="18" height="18" x="3" y="3" rx="2" />
+                        </svg>
+                    </div>
+                    <div class="trigger-text">
+                        <h2>Números Unidades</h2>
+                        <p>Atenção Primária, Atenção Especializada, Urgência e Emergência e Atenção Hospitalar, Equipes
+                            e Leitos</p>
+                    </div>
+                </div>
+                <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m6 9 6 6 6-6" />
+                </svg>
+            </div>
+
+            <div class="expand-content">
+                <div class="info-grid">
+                    <!-- APS e ESF -->
+                    <div class="info-box">
+                        <span class="stat-badge">115</span>
+                        <h3>Unidades APS</h3>
+                    </div>
+                    <div class="info-box">
+                        <span class="stat-badge">83</span>
+                        <h3>Equipes ESF</h3>
+                    </div>
+                    <div class="info-box">
+                        <span class="stat-badge">869</span>
+                        <h3>Leitos</h3>
+                        <small>Hospitais, UPAs e Centrais</small>
+                    </div>
+
+                    <!-- Urgência e Emergência -->
+                    <div class="info-box">
+                        <span class="stat-badge">10</span>
+                        <h3>Urgência e Emergência</h3>
+                        <ul class="unit-list">
+                            <li>UPA ITU - SP</li>
+                            <li>UPA DR THELMO - SP</li>
+                            <li>UPA JACANÃ - SP</li>
+                            <li>UPA PICOS - PI</li>
+                            <li>UPA SÃO RAIMUNDO NONATO - PI</li>
+                            <li>UPA TOBIAS BARRETO - SE</li>
+                            <li>PSM SANTANA - SP</li>
+                            <li>AMA/UBS INTEGRADA JD. JOAMAR - SP</li>
+                            <li>AMA/UBS INTEGRADA LAUZANE PAULISTA - SP</li>
+                            <li>AMA/UBS INTEGRADA WAMBERTO DIAS DA COSTA - SP</li>
+                        </ul>
+                    </div>
+
+                    <!-- Ambulatórios -->
+                    <div class="info-box">
+                        <span class="stat-badge">7</span>
+                        <h3>Ambulatórios</h3>
+                        <ul class="unit-list">
+                            <li>AME ANDRADINA - SP</li>
+                            <li>AME CRI - SP</li>
+                            <li>AME PROMISSÃO - SP</li>
+                            <li>CENTRAL DE DIAGNÓSTICO VALENÇA - PI</li>
+                            <li>CENTRAL DE DIAGNÓSTICO PICOS - PI</li>
+                            <li>CENTRAL DE DIAGNÓSTICO CASTELO DO PIAUÍ - PI</li>
+                            <li>CENTRAL DE DIAGNÓSTICO TERESINA - PI</li>
+                        </ul>
+                    </div>
+
+                    <!-- Hospitais -->
+                    <div class="info-box">
+                        <span class="stat-badge">9</span>
+                        <h3>Hospitais</h3>
+                        <ul class="unit-list">
+                            <li>HOSPITAL MUNICIPAL DE CUBATÃO - SP</li>
+                            <li>PAI ZN - SP</li>
+                            <li>HOSP. MUN. DELFINA ALVES - ITURAMA/MG</li>
+                            <li>HOSP. DO MOCAMBINHO - TERESINA/PI</li>
+                            <li>HOSP. REGIONAL JUSTINO LUZ - PICOS/PI</li>
+                            <li>NOVO HOSP. REGIONAL DE PICOS - PI</li>
+                            <li>HOSP. REGIONAL SENADOR JOSÉ CÂNDIDO FERRAZ - SÃO RAIMUNDO NONATO/PI</li>
+                            <li>HOSP. REGIONAL EUSTÁQUIO PORTELA - VALENÇA/PI</li>
+                            <li>HOSPITAL CAMINHO DE DAMASCO - SP</li>
+                        </ul>
+                    </div>
+
+                    <!-- Especialidades -->
+                    <div class="info-box full-width">
+                        <span class="stat-badge">1</span>
+                        <h3>Ambulatório de Especialidades (Teleatendimento)</h3>
+                        <p style="font-size: 13px; margin: 5px 0; color: var(--muted);">
+                            POLICLÍNICA – SERVIÇO AMBULATORIAL DE ESPECIALIDADES DR. MALUF - CUBATÃO/SP
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTRATOS VIGENTES -->
+        <div class="section-detail" id="contratosSection">
+            <div class="page-break"></div>
+            <div class="section-trigger" onclick="this.parentElement.classList.toggle('active')">
+                <div class="trigger-content">
+                    <div class="trigger-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                            <polyline points="10 9 9 9 8 9" />
+                        </svg>
+                    </div>
+                    <div class="trigger-text">
+                        <h2>26 Contratos Vigentes</h2>
+                        <p>9 Listas Detalhadas por Gestão</p>
+                    </div>
+                </div>
+                <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m6 9 6 6 6-6" />
+                </svg>
+            </div>
+
+            <div class="expand-content">
+                <div class="info-grid">
+                    <!-- MG -->
+                    <div class="info-box">
+                        <h3>Minas Gerais - Iturama (Municipal)</h3>
+                        <span class="sub-label">1 Contrato, 1 Unidade</span>
+                        <ul class="unit-list">
+                            <li> Iturama - Hospital Municipal Delfina Alves Barbosa</li>
+                        </ul>
+                    </div>
+
+                    <!-- PI -->
+                    <div class="info-box">
+                        <h3>Piauí (Estadual)</h3>
+                        <span class="sub-label">13 Contratos, 13 Unidades</span>
+                        <ul class="unit-list">
+                            <li>Castelo do Piauí - Central de Diagnóstico do Castelo do Piauí</li>
+                            <li>Picos - Central de Diagnóstico de Picos</li>
+                            <li>Picos - Hospital Regional Justino Luz</li>
+                            <li>Picos - Novo Hospital Regional de Picos</li>
+                            <li>Picos - UPA 24H</li>
+                            <li>São João do Piauí - CER II</li>
+                            <li>São Raimundo Nonato - Hospital Regional Senador José Cândido Ferraz</li>
+                            <li>São Raimundo Nonato - UPA 24H</li>
+                            <li>Teresina - Central de Diagnóstico de Teresina</li>
+                            <li>Teresina - CETEA</li>
+                            <li>Teresina - Unidade Integrada de Saúde do Mocambinho</li>
+                            <li>Valença do Piauí - Central de Diagnóstico de Valença</li>
+                            <li>Valença do Piauí - Hospital Regional Eustáquio Portela</li>
+                        </ul>
+                    </div>
+
+                    <!-- SE -->
+                    <div class="info-box">
+                        <h3>Sergipe (Estadual)</h3>
+                        <span class="sub-label">1 Contrato, 1 Unidade</span>
+                        <ul class="unit-list">
+                            <li>Tobias Barreto - UPA São Vicente de Paulo</li>
+                        </ul>
+                    </div>
+
+                    <!-- SP ESTADUAL -->
+                    <div class="info-box">
+                        <h3>São Paulo (Estadual)</h3>
+                        <span class="sub-label">4 Contratos, 4 Unidades</span>
+                        <ul class="unit-list">
+                            <li>AME Andradina</li>
+                            <li>AME CRI Norte</li>
+                            <li>AME Promissão</li>
+                            <li>PAI ZN</li>
+                        </ul>
+                    </div>
+
+                    <!-- SP CUBATAO -->
+                    <div class="info-box">
+                        <h3>São Paulo - Cubatão (Municipal)</h3>
+                        <span class="sub-label">2 Contratos, 29 Unidades</span>
+                        <ul class="unit-list">
+                            <li>Cubatão - APS</li>
+                            <li>Cubatão - HMC</li>
+                        </ul>
+                    </div>
+
+                    <!-- SP GARCA -->
+                    <div class="info-box">
+                        <h3>São Paulo - Garça (Municipal)</h3>
+                        <span class="sub-label">1 Contrato, 19 Unidades</span>
+                        <ul class="unit-list">
+                            <li>Garça - APS</li>
+                        </ul>
+                    </div>
+
+                    <!-- SP ITU -->
+                    <div class="info-box">
+                        <h3>São Paulo - Itu (Municipal)</h3>
+                        <span class="sub-label">2 Contratos, 5 Unidades</span>
+                        <ul class="unit-list">
+                            <li>Itu - SRT</li>
+                            <li>Itu - UPA Nossa Senhora Aparecida</li>
+                        </ul>
+                    </div>
+
+                    <!-- SP JACAREI -->
+                    <div class="info-box">
+                        <h3>São Paulo - Jacareí (Municipal)</h3>
+                        <span class="sub-label">1 Contrato, 1 Unidade</span>
+                        <ul class="unit-list">
+                            <li>Jacareí - UPA 24H Dr. Thelmo de Almeida Cruz</li>
+                        </ul>
+                    </div>
+
+                    <!-- SP SAO PAULO -->
+                    <div class="info-box">
+                        <h3>São Paulo - ZN (Municipal)</h3>
+                        <span class="sub-label">1 Contrato, 38 Unidades</span>
+                        <ul class="unit-list">
+                            <li>São Paulo ZN - APS</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CIDADES COM UNIDADES GERENCIADAS (NOVA SEÇÃO) -->
+         <div class="page-break"></div>
+        <div class="section-detail" id="cidadesSection">
+            <div class="section-trigger" onclick="this.parentElement.classList.toggle('active')">
+                <div class="trigger-content">
+                    <div class="trigger-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="11" r="3" />
+                            <path
+                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z" />
+                        </svg>
+                    </div>
+                    <div class="trigger-text">
+                        <h2>Cidades Gerenciadas</h2>
+                        <p>Municípios com Contratos Vigentes e Encerrados</p>
+                    </div>
+                </div>
+                <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m6 9 6 6 6-6" />
+                </svg>
+            </div>
+
+            <div class="expand-content">
+                <div class="info-grid">
+                    <!-- VIGENTES -->
+                    <div class="info-box">
+                        <span class="stat-badge">Contratos Vigentes</span>
+                        <h3>15 Municípios</h3>
+                        <ul class="unit-list">
+                            <li><b>MG:</b> Iturama</li>
+                            <li><b>PI:</b> Castelo do Piauí, Picos, São João do Piauí, São Raimundo Nonato, Teresina,
+                                Valença do Piauí</li>
+                            <li><b>SE:</b> Tobias Barreto</li>
+                            <li><b>SP:</b> Andradina, Promissão, Cubatão, Garça, Itu, Jacareí, São Paulo ZN</li>
+                        </ul>
+                    </div>
+
+                    <!-- ENCERRADOS -->
+                    <div class="info-box">
+                        <span class="closed-label">Contratos Encerrados</span>
+                        <h3>Histórico de Municípios com Contratos Encerrados</h3>
+                        <ul class="unit-list">
+                            <li><b>RJ:</b> Quissamã, São Pedro da Aldeia</li>
+                            <li><b>SP:</b> Americana, Barueri, Caçapava, UPA Itu, Juquitiba, Pedro de Toledo, Poá,
+                                Salto, Santa Isabel</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUPERINTENDÊNCIAS (NOVA SEÇÃO) -->
+         <div class="page-break"></div>
+        <div class="section-detail" id="superintendenciasSection">
+            <div class="section-trigger" onclick="this.parentElement.classList.toggle('active')">
+                <div class="trigger-content">
+                    <div class="trigger-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                    </div>
+                    <div class="trigger-text">
+                        <h2>Superintendências da Ponta</h2>
+                        <p>Gestão de Unidades</p>
+                    </div>
+                </div>
+                <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m6 9 6 6 6-6" />
+                </svg>
+            </div>
+
+            <div class="expand-content">
+                <div class="info-grid">
+                    <div class="info-box">
+                        <span class="sub-label">Superintendência de Atenção Primária a Saúde</span>
+
+                        <ul class="unit-list">
+                            <li>SP - Cubatão - APS</li>
+                            <li>SP - Garça - APS</li>
+                            <li>SP - Itu - SRT</li>
+                            <li>SP - São Paulo ZN - APS</li>
+                            <li>PI - São João do Piauí - CER II</li>
+                            <li>PI - Teresina - CETEA</li>
+                            <li>*Clínica de Imagens SBCD (Garça/SP)</li>
+                            <li>*Hospital Caminho de Damasco (Garça/SP)</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box">
+                        <span class="sub-label">Superintendência Hospitalar</span>
+                        <ul class="unit-list">
+                            <li>MG - Iturama - Hosp. Mun. Delfina Alves</li>
+                            <li>PI - Picos - Hosp. Regional Justino Luz</li>
+                            <li>PI - Picos - Novo Hosp. Regional de Picos</li>
+                            <li>PI - São Raimundo Nonato - Hosp. Regional</li>
+                            <li>PI - Teresina - Unidade Integrada de Saúde do Mocambinho</li>
+                            <li>PI - Valença do Piauí - Hosp. Regional Eustáquio Portela</li>
+                            <li>SP - Cubatão - HMC (Complexo Hospitalar Municipal Dr. Luiz de Camargo da Fonseca e
+                                Silva)</li>
+                            <li>SP - PAI ZN (Polo Intensivo em Saúde Mental)</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box">
+                        <span class="sub-label">Superintendência de Urgência/Emergência Ambulatorial</span>
+                        <ul class="unit-list">
+                            <li>PI - Castelo do Piauí - Central de Diagnóstico do Castelo do Piauí</li>
+                            <li>PI - Picos - Central de Diagnóstico de Picos</li>
+                            <li>PI - Picos - UPA 24H</li>
+                            <li>PI - São Raimundo Nonato - UPA 24H</li>
+                            <li>PI - Teresina - Central de Diagnóstico de Teresina</li>
+                            <li>PI - Valença do Piauí - Central de Diagnóstico de Valença</li>
+                            <li>SE - Tobias Barreto - UPA São Vicente de Paulo</li>
+                            <li>SP - AME Andradina</li>
+                            <li>SP - AME CRI Norte</li>
+                            <li>SP - AME Promissão</li>
+                            <li>SP - Itu - UPA Nossa Senhora Aparecida</li>
+                            <li>SP - Jacareí - UPA 24H Dr. Thelmo de Almeida Cruz</li>
+                            <li>*UPAs / PSAs / AMAs (Zona Norte São Paulo)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-note">
+            Dados da Comunicação da SBCD - Sociedade Brasileira de Caminho de Damasco
+        </div>
+    </div>
+
+</body>
+
+</html>
